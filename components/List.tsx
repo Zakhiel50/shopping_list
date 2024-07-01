@@ -279,8 +279,8 @@ const List = ({ onTotalPriceChange }:any) => {
             { modalVisible === true ?
         <Modal>
             <View style={styles.modal}>
-                <Text style={styles.textModal}>Cette action supprimera le ticket de caisse.</Text>
-                <Text style={styles.textModal}>Voulez vous continuer ?</Text>
+                <Text style={styles.textModal}>Voulez vous ajouter ce produit</Text>
+                <Text style={styles.textModal}>sur le ticket de caisse ? </Text>
                 <CustomButton 
                 addStyle={[styles.redBtn, styles.greenBtn]}
                 action={() => [addHistory(item, item.id), setModalVisible(false), deleteProduct(item.id) ]}
