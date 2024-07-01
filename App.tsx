@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,10 +21,23 @@ import { Arimo_400Regular,
   Arimo_700Bold 
 } from '@expo-google-fonts/arimo';
 import { Ionicons } from '@expo/vector-icons';
+import { CardColor } from './colors';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 
 export default function App() {
+  const [totalPrice, setTotalPrice] = useState<number>();
+  const [historyTotalPrice, setHistoryTotalPrice] = useState<number>()
+
+  const handleTotalPriceChange = (price: number) => {
+      setTotalPrice(price);
+  };
+
+  const handleHistoryPriceChange = (price:number) => {
+    setHistoryTotalPrice(price)
+  }
+
   const [fontsLoaded] = useFonts({
     Raleway_400Regular,
     Raleway_600SemiBold,
@@ -43,36 +56,48 @@ export default function App() {
   function HomeScreen() {
     return (
       <View style={styles.container}>
-        <List/>
+        <Text style={{textAlign: 'center', paddingVertical: 10, backgroundColor: CardColor, width: '100%', color: '#fff', fontWeight:'bold', marginBottom: 10}}>
+        {totalPrice && totalPrice > 0 ? 
+          <Text>TOTAL: {totalPrice.toFixed(2)} €</Text>
+          : null}
+          </Text>
+        <List onTotalPriceChange={handleTotalPriceChange} />
       </View>
     );
   }
+
   
   function HistoryScreen() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Historique</Text>
-        <History/>
+        <Text style={{textAlign: 'center', paddingVertical: 10, backgroundColor: CardColor, width: '100%', color: '#fff', fontWeight:'bold', marginBottom: 10}}>
+          {historyTotalPrice && historyTotalPrice > 0 ? 
+          <Text>TOTAL: {historyTotalPrice.toFixed(2)} €</Text>
+          : null}
+          </Text>
+        <Text style={styles.text}>Ticket de caisse</Text>
+        <History onHistoryTotalPriceChange={handleHistoryPriceChange}/>
       </View>
     );
   }
 
   if (fontsLoaded) {
   return (
+    <SafeAreaProvider onLayout={onLayoutRootView}>
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
 
-            if (route.name === 'Home') {
-              iconName = 'home';
-            } else if (route.name === 'History') {
-              iconName = 'time';
+            if (route.name === 'Liste') {
+              iconName = 'list';
+            } else if (route.name === 'Caisse') {
+              iconName = 'cart';
             }
 
             // Vous pouvez retourner n'importe quelle icône ici!
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={(size)} color={color} />;
           },
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
@@ -80,13 +105,11 @@ export default function App() {
           headerShown: false,
         })}
       >
-          <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="History" component={HistoryScreen} options={{ title: 'Historique' }} />
+          <Tab.Screen name="Liste" component={HomeScreen} />
+        <Tab.Screen name="Caisse" component={HistoryScreen} options={{ title: 'Ticket de Caisse' }} />
       </Tab.Navigator>
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-    </View>
     </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 }

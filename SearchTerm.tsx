@@ -1,4 +1,4 @@
-const term = [
+export const searchTerms = [
     "Pain",
     "Baguette",
     "Croissant",
@@ -52,8 +52,7 @@ const term = [
     "Parmesan",
     "Gorgonzola",
     "Bleu d'Auvergne",
-    "Jambon blanc",
-    "Jambon cru",
+    "Jambon",
     "Saucisson",
     "Chorizo",
     "Salami",
